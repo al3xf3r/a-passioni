@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Camera, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, Camera } from "lucide-react";
 
 const SLIDES = [
   { src: "/images/galleria/unoo.webp", alt: "Sacra Rappresentazione – scena della Passione" },
@@ -28,6 +28,7 @@ export default function HeroCarousel() {
   const [current, setCurrent] = useState(0);
   const [time, setTime] = useState(getTimeLeft());
   const [loaded, setLoaded] = useState(false);
+  const touchStartX = useRef<number | null>(null);
 
   const next = useCallback(() => setCurrent((c) => (c + 1) % SLIDES.length), []);
   const prev = useCallback(() => setCurrent((c) => (c - 1 + SLIDES.length) % SLIDES.length), []);
@@ -43,79 +44,53 @@ export default function HeroCarousel() {
     return () => clearInterval(t);
   }, []);
 
-  return (
-    <section style={{
-      position: "relative",
-      height: "100svh",
-      minHeight: 600,
-      display: "flex",
-      flexDirection: "column",
-      overflow: "hidden",
-    }}>
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
 
-      {/* Slides background */}
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) {
+      diff > 0 ? next() : prev();
+    }
+    touchStartX.current = null;
+  };
+
+  return (
+    <section
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+      style={{ position: "relative", height: "100svh", minHeight: 600, display: "flex", flexDirection: "column", overflow: "hidden" }}
+    >
       {SLIDES.map((slide, i) => (
-        <div key={slide.src} style={{
-          position: "absolute", inset: 0,
-          opacity: i === current ? 1 : 0,
-          transition: "opacity 0.9s ease",
-          zIndex: 0,
-        }}>
-          <Image src={slide.src} alt={slide.alt} fill sizes="100vw"
-            style={{ objectFit: "cover" }} priority={i === 0} />
+        <div key={slide.src} style={{ position: "absolute", inset: 0, opacity: i === current ? 1 : 0, transition: "opacity 0.9s ease", zIndex: 0 }}>
+          <Image src={slide.src} alt={slide.alt} fill sizes="100vw" style={{ objectFit: "cover" }} priority={i === 0} />
         </div>
       ))}
 
-      {/* Overlay */}
-      <div style={{
-        position: "absolute", inset: 0, zIndex: 1,
-        background: "linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.72) 55%, rgba(0,0,0,0.95) 100%)",
-      }} />
+      <div style={{ position: "absolute", inset: 0, zIndex: 1, background: "linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.72) 55%, rgba(0,0,0,0.95) 100%)" }} />
 
-      {/* MAIN CONTENT — takes all available space above countdown */}
-      <div style={{
-        position: "relative", zIndex: 2,
-        flex: 1,
-        display: "flex",
-        alignItems: "center",
-        padding: "80px 0 24px",
-      }}>
+      {/* Content */}
+      <div style={{ position: "relative", zIndex: 2, flex: 1, display: "flex", alignItems: "center", padding: "80px 0 24px" }}>
         <div className="container">
           <div style={{ maxWidth: 640 }}>
-            <span style={{
-              display: "block", fontSize: "0.68rem", fontWeight: 700,
-              letterSpacing: "0.14em", textTransform: "uppercase",
-              color: "var(--color-primary-light)", marginBottom: 14,
-            }}>
+            <span style={{ display: "block", fontSize: "0.68rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--color-primary-light)", marginBottom: 14 }}>
               Associazione A Passioni · Francavilla di Sicilia
             </span>
-            <h1 style={{
-              color: "white",
-              fontSize: "clamp(1.9rem, 5vw, 4.2rem)",
-              fontWeight: 600, lineHeight: 1.1, marginBottom: 18,
-            }}>
+            <h1 style={{ color: "white", fontSize: "clamp(1.9rem, 5vw, 4.2rem)", fontWeight: 600, lineHeight: 1.1, marginBottom: 18 }}>
               La Passione di Cristo
               <br />
               <span style={{ color: "var(--color-primary-light)" }}>vive ancora</span>
             </h1>
-            <p style={{
-              color: "rgba(255,255,255,0.9)",
-              fontSize: "clamp(0.88rem, 2vw, 1.05rem)",
-              lineHeight: 1.7, maxWidth: 480, marginBottom: 28,
-            }}>
+            <p style={{ color: "rgba(255,255,255,0.9)", fontSize: "clamp(0.95rem, 2vw, 1.05rem)", lineHeight: 1.7, maxWidth: 480, marginBottom: 28 }}>
               Dal 1790, il borgo antico di Francavilla di Sicilia diventa teatro naturale per una delle rappresentazioni sacre più antiche della Sicilia.
             </p>
-            {/* Bottoni — colonna su mobile, riga su desktop */}
-            <div style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 10,
-              alignItems: "flex-start",
-            }}>
-              <Link href="/eventi/sacra-rappresentazione" className="btn btn-primary" style={{ fontSize: "0.82rem" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10, alignItems: "flex-start" }}>
+              <Link href="/eventi/sacra-rappresentazione" className="btn btn-primary" style={{ fontSize: "0.85rem" }}>
                 Scopri la Rappresentazione <ArrowRight size={15} />
               </Link>
-              <Link href="/galleria" className="btn btn-ghost" style={{ fontSize: "0.82rem" }}>
+              <Link href="/galleria" className="btn btn-ghost" style={{ fontSize: "0.85rem" }}>
                 <Camera size={15} /> Archivio Fotografico
               </Link>
             </div>
@@ -123,97 +98,38 @@ export default function HeroCarousel() {
         </div>
       </div>
 
-      {/* Dots — sopra il countdown */}
-      <div style={{
-        position: "relative", zIndex: 2,
-        display: "flex", justifyContent: "center", gap: 8,
-        paddingBottom: 12,
-      }}>
+      {/* Dots */}
+      <div style={{ position: "relative", zIndex: 2, display: "flex", justifyContent: "center", gap: 8, paddingBottom: 12 }}>
         {SLIDES.map((_, i) => (
-          <button key={i} onClick={() => setCurrent(i)}
-            aria-label={`Slide ${i + 1}`}
-            style={{
-              width: i === current ? 24 : 8, height: 8, borderRadius: 4,
-              background: i === current ? "var(--color-primary-light)" : "rgba(255,255,255,0.4)",
-              border: "none", cursor: "pointer", transition: "all 0.3s", padding: 0,
-            }} />
+          <button key={i} onClick={() => setCurrent(i)} aria-label={`Slide ${i + 1}`}
+            style={{ width: i === current ? 24 : 8, height: 8, borderRadius: 4, background: i === current ? "var(--color-primary-light)" : "rgba(255,255,255,0.4)", border: "none", cursor: "pointer", transition: "all 0.3s", padding: 0 }} />
         ))}
       </div>
 
-      {/* Arrows — posizionate lateralmente al centro del contenuto, non su tutta l'altezza */}
-      <button onClick={prev} aria-label="Precedente" style={{
-        position: "absolute", left: 12, top: "42%",
-        transform: "translateY(-50%)", zIndex: 3,
-        background: "rgba(0,0,0,0.35)", border: "1.5px solid rgba(255,255,255,0.3)",
-        borderRadius: "50%", width: 36, height: 36,
-        display: "flex", alignItems: "center", justifyContent: "center",
-        cursor: "pointer", color: "white",
-      }}>
-        <ChevronLeft size={18} />
-      </button>
-      <button onClick={next} aria-label="Successiva" style={{
-        position: "absolute", right: 12, top: "42%",
-        transform: "translateY(-50%)", zIndex: 3,
-        background: "rgba(0,0,0,0.35)", border: "1.5px solid rgba(255,255,255,0.3)",
-        borderRadius: "50%", width: 36, height: 36,
-        display: "flex", alignItems: "center", justifyContent: "center",
-        cursor: "pointer", color: "white",
-      }}>
-        <ChevronRight size={18} />
-      </button>
-
-      {/* COUNTDOWN STRIP — sempre in fondo, non si sovrappone mai */}
-      <div style={{
-        position: "relative", zIndex: 2, flexShrink: 0,
-        background: "rgba(0,0,0,0.88)",
-        backdropFilter: "blur(10px)",
-        borderTop: "1px solid rgba(255,255,255,0.1)",
-      }}>
+      {/* Countdown strip */}
+      <div style={{ position: "relative", zIndex: 2, flexShrink: 0, background: "rgba(0,0,0,0.88)", backdropFilter: "blur(10px)", borderTop: "1px solid rgba(255,255,255,0.1)" }}>
         <div className="container">
-          <div style={{
-            display: "flex", alignItems: "center",
-            justifyContent: "space-between",
-            flexWrap: "wrap", gap: 12,
-            padding: "14px 0",
-          }}>
-            {/* Label */}
-            <div style={{ minWidth: 0, flex: "1 1 160px" }}>
-              <div style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--color-primary-light)", marginBottom: 2 }}>
-                Prossimo evento
-              </div>
-              <div style={{ fontFamily: "var(--font-display)", fontSize: "0.9rem", fontWeight: 500, color: "white", lineHeight: 1.3 }}>
-                Rappresentazione della Passione di Cristo
-              </div>
-              <div style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.45)", marginTop: 1 }}>
-                21 marzo 2027
-              </div>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12, padding: "14px 0" }}>
+            <div style={{ minWidth: 0, flex: "1 1 140px" }}>
+              <div style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--color-primary-light)", marginBottom: 2 }}>Prossimo evento</div>
+              <div style={{ fontFamily: "var(--font-display)", fontSize: "0.9rem", fontWeight: 500, color: "white", lineHeight: 1.3 }}>Rappresentazione della Passione di Cristo</div>
+              <div style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.45)", marginTop: 1 }}>21 marzo 2027</div>
             </div>
-
-            {/* Numbers */}
             {loaded && (
               <div style={{ display: "flex", gap: 8, alignItems: "center", flexShrink: 0 }}>
-                {([
-                  { value: time.days, label: "gg" },
-                  { value: time.hours, label: "ore" },
-                  { value: time.minutes, label: "min" },
-                  { value: time.seconds, label: "sec" },
-                ] as { value: number; label: string }[]).map(({ value, label }, i) => (
+                {([{ value: time.days, label: "gg" }, { value: time.hours, label: "ore" }, { value: time.minutes, label: "min" }, { value: time.seconds, label: "sec" }] as { value: number; label: string }[]).map(({ value, label }, i) => (
                   <div key={label} style={{ display: "flex", alignItems: "center", gap: 8 }}>
                     <div style={{ textAlign: "center" }}>
                       <div style={{ fontFamily: "var(--font-display)", fontSize: "clamp(1.2rem, 2vw, 1.8rem)", fontWeight: 700, color: "white", lineHeight: 1, minWidth: 32, textAlign: "center" }}>
                         {String(value).padStart(2, "0")}
                       </div>
-                      <div style={{ fontSize: "0.52rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(255,255,255,0.4)", marginTop: 2 }}>
-                        {label}
-                      </div>
+                      <div style={{ fontSize: "0.52rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(255,255,255,0.4)", marginTop: 2 }}>{label}</div>
                     </div>
                     {i < 3 && <span style={{ color: "rgba(255,255,255,0.2)", fontSize: "1rem" }}>:</span>}
                   </div>
                 ))}
               </div>
             )}
-
-            {/* CTA */}
             <Link href="/eventi/sacra-rappresentazione" className="btn btn-primary" style={{ fontSize: "0.75rem", flexShrink: 0 }}>
               Scopri di più <ArrowRight size={13} />
             </Link>

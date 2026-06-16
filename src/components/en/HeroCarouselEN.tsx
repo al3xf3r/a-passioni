@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Camera, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, Camera } from "lucide-react";
 
 const SLIDES = [
   { src: "/images/galleria/unoo.webp", alt: "Sacred Representation – Passion scene" },
@@ -28,6 +28,7 @@ export default function HeroCarouselEN() {
   const [current, setCurrent] = useState(0);
   const [time, setTime] = useState(getTimeLeft());
   const [loaded, setLoaded] = useState(false);
+  const touchStartX = useRef<number | null>(null);
 
   const next = useCallback(() => setCurrent((c) => (c + 1) % SLIDES.length), []);
   const prev = useCallback(() => setCurrent((c) => (c - 1 + SLIDES.length) % SLIDES.length), []);
@@ -39,15 +40,22 @@ export default function HeroCarouselEN() {
     return () => clearInterval(t);
   }, []);
 
-  return (
-    <section style={{ position: "relative", height: "100svh", minHeight: 600, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+  const onTouchStart = (e: React.TouchEvent) => { touchStartX.current = e.touches[0].clientX; };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) diff > 0 ? next() : prev();
+    touchStartX.current = null;
+  };
 
+  return (
+    <section onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}
+      style={{ position: "relative", height: "100svh", minHeight: 600, display: "flex", flexDirection: "column", overflow: "hidden" }}>
       {SLIDES.map((slide, i) => (
         <div key={slide.src} style={{ position: "absolute", inset: 0, opacity: i === current ? 1 : 0, transition: "opacity 0.9s ease", zIndex: 0 }}>
           <Image src={slide.src} alt={slide.alt} fill sizes="100vw" style={{ objectFit: "cover" }} priority={i === 0} />
         </div>
       ))}
-
       <div style={{ position: "absolute", inset: 0, zIndex: 1, background: "linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.72) 55%, rgba(0,0,0,0.95) 100%)" }} />
 
       <div style={{ position: "relative", zIndex: 2, flex: 1, display: "flex", alignItems: "center", padding: "80px 0 24px" }}>
@@ -57,18 +65,16 @@ export default function HeroCarouselEN() {
               A Passioni Association · Francavilla di Sicilia, Sicily
             </span>
             <h1 style={{ color: "white", fontSize: "clamp(1.9rem, 5vw, 4.2rem)", fontWeight: 600, lineHeight: 1.1, marginBottom: 18 }}>
-              The Passion of Christ
-              <br />
-              <span style={{ color: "var(--color-primary-light)" }}>lives on</span>
+              The Passion of Christ<br /><span style={{ color: "var(--color-primary-light)" }}>lives on</span>
             </h1>
-            <p style={{ color: "rgba(255,255,255,0.9)", fontSize: "clamp(0.88rem, 2vw, 1.05rem)", lineHeight: 1.7, maxWidth: 480, marginBottom: 28 }}>
+            <p style={{ color: "rgba(255,255,255,0.9)", fontSize: "clamp(0.95rem, 2vw, 1.05rem)", lineHeight: 1.7, maxWidth: 480, marginBottom: 28 }}>
               Since 1790, the ancient village of Francavilla di Sicilia becomes a natural theatre for one of Sicily&apos;s oldest sacred representations.
             </p>
             <div style={{ display: "flex", flexDirection: "column", gap: 10, alignItems: "flex-start" }}>
-              <Link href="/en/eventi/sacra-rappresentazione" className="btn btn-primary" style={{ fontSize: "0.82rem" }}>
+              <Link href="/en/eventi/sacra-rappresentazione" className="btn btn-primary" style={{ fontSize: "0.85rem" }}>
                 Discover the Representation <ArrowRight size={15} />
               </Link>
-              <Link href="/en/galleria" className="btn btn-ghost" style={{ fontSize: "0.82rem" }}>
+              <Link href="/en/galleria" className="btn btn-ghost" style={{ fontSize: "0.85rem" }}>
                 <Camera size={15} /> Photo Archive
               </Link>
             </div>
@@ -83,29 +89,17 @@ export default function HeroCarouselEN() {
         ))}
       </div>
 
-      <button onClick={prev} aria-label="Previous" style={{ position: "absolute", left: 12, top: "42%", transform: "translateY(-50%)", zIndex: 3, background: "rgba(0,0,0,0.35)", border: "1.5px solid rgba(255,255,255,0.3)", borderRadius: "50%", width: 36, height: 36, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "white" }}>
-        <ChevronLeft size={18} />
-      </button>
-      <button onClick={next} aria-label="Next" style={{ position: "absolute", right: 12, top: "42%", transform: "translateY(-50%)", zIndex: 3, background: "rgba(0,0,0,0.35)", border: "1.5px solid rgba(255,255,255,0.3)", borderRadius: "50%", width: 36, height: 36, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "white" }}>
-        <ChevronRight size={18} />
-      </button>
-
       <div style={{ position: "relative", zIndex: 2, flexShrink: 0, background: "rgba(0,0,0,0.88)", backdropFilter: "blur(10px)", borderTop: "1px solid rgba(255,255,255,0.1)" }}>
         <div className="container">
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12, padding: "14px 0" }}>
-            <div style={{ minWidth: 0, flex: "1 1 160px" }}>
+            <div style={{ minWidth: 0, flex: "1 1 140px" }}>
               <div style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--color-primary-light)", marginBottom: 2 }}>Next event</div>
               <div style={{ fontFamily: "var(--font-display)", fontSize: "0.9rem", fontWeight: 500, color: "white", lineHeight: 1.3 }}>Representation of the Passion of Christ</div>
               <div style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.45)", marginTop: 1 }}>21 March 2027</div>
             </div>
             {loaded && (
               <div style={{ display: "flex", gap: 8, alignItems: "center", flexShrink: 0 }}>
-                {([
-                  { value: time.days, label: "days" },
-                  { value: time.hours, label: "hrs" },
-                  { value: time.minutes, label: "min" },
-                  { value: time.seconds, label: "sec" },
-                ] as { value: number; label: string }[]).map(({ value, label }, i) => (
+                {([{ value: time.days, label: "days" }, { value: time.hours, label: "hrs" }, { value: time.minutes, label: "min" }, { value: time.seconds, label: "sec" }] as { value: number; label: string }[]).map(({ value, label }, i) => (
                   <div key={label} style={{ display: "flex", alignItems: "center", gap: 8 }}>
                     <div style={{ textAlign: "center" }}>
                       <div style={{ fontFamily: "var(--font-display)", fontSize: "clamp(1.2rem, 2vw, 1.8rem)", fontWeight: 700, color: "white", lineHeight: 1, minWidth: 32, textAlign: "center" }}>
