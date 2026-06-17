@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import NavbarEN from "@/components/en/NavbarEN";
-import FooterEN from "@/components/en/FooterEN";
+import "./globals.css";
 
 const BASE_URL = "https://www.associazioneapassioni.com";
 const OG_IMAGE = `${BASE_URL}/images/og-passioni.jpg`;
@@ -8,55 +7,58 @@ const OG_IMAGE = `${BASE_URL}/images/og-passioni.jpg`;
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: "A Passioni · The Sacred Representation of the Passion of Christ in Francavilla di Sicilia",
+    default: "A Passioni · La Sacra Rappresentazione della Passione di Cristo a Francavilla di Sicilia",
     template: "%s · A Passioni",
   },
   description:
-    "Since 1790, the ancient village of Francavilla di Sicilia becomes a natural open-air theatre for the Sacred Representation of the Passion of Christ. Discover events, traditions and our photo archive.",
+    "Dal 1790, il borgo antico di Francavilla di Sicilia si trasforma in teatro naturale per la Sacra Rappresentazione della Passione di Cristo. Scopri eventi, tradizioni e archivio fotografico.",
   keywords: [
-    "Passion of Christ",
-    "Sacred Representation Sicily",
+    "Passione di Cristo",
+    "Sacra Rappresentazione",
     "Francavilla di Sicilia",
-    "Via Crucis Sicily",
-    "Holy Week Sicily",
-    "Sicilian religious tradition",
-    "Easter Sicily",
-    "Religious tourism Sicily",
-    "A Passioni Association",
-    "Alcantara river Sicily",
+    "Via Crucis",
+    "Settimana Santa Sicilia",
+    "Tradizione religiosa siciliana",
+    "Rappresentazione sacra Messina",
+    "Borgo antico Sicilia",
+    "Fiume Alcantara",
+    "Turismo religioso Sicilia",
+    "Associazione A Passioni",
+    "Domenica delle Palme",
   ],
   authors: [{ name: "Associazione A Passioni", url: BASE_URL }],
   creator: "Associazione A Passioni",
   publisher: "Associazione A Passioni",
+  category: "Cultura e tradizioni",
   openGraph: {
-    title: "A Passioni · The Sacred Representation of the Passion of Christ",
+    title: "A Passioni · La Sacra Rappresentazione della Passione di Cristo",
     description:
-      "Since 1790, the ancient village of Francavilla di Sicilia transforms into a natural theatre for one of Sicily's oldest sacred representations. A tradition of faith, community and collective memory.",
-    url: `${BASE_URL}/en`,
+      "Dal 1790, il borgo antico di Francavilla di Sicilia si trasforma in teatro naturale per una delle rappresentazioni sacre più antiche della Sicilia. Una tradizione di fede, comunità e memoria collettiva.",
+    url: BASE_URL,
     siteName: "A Passioni",
-    locale: "en_US",
+    locale: "it_IT",
     type: "website",
     images: [
       {
         url: OG_IMAGE,
         width: 1200,
         height: 630,
-        alt: "Sacred Representation of the Passion of Christ in Francavilla di Sicilia, Sicily",
+        alt: "Sacra Rappresentazione della Passione di Cristo a Francavilla di Sicilia",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "A Passioni · Passion of Christ in Francavilla di Sicilia, Sicily",
+    title: "A Passioni · La Passione di Cristo a Francavilla di Sicilia",
     description:
-      "Since 1790, a century-old tradition in the ancient village of Francavilla di Sicilia. Discover the Sacred Representation of the Passion of Christ.",
+      "Dal 1790, una tradizione centenaria nel borgo antico di Francavilla di Sicilia. Scopri la Sacra Rappresentazione della Passione di Cristo.",
     images: [OG_IMAGE],
   },
   alternates: {
-    canonical: `${BASE_URL}/en`,
+    canonical: BASE_URL,
     languages: {
-      "en-US": `${BASE_URL}/en`,
       "it-IT": BASE_URL,
+      "en-US": `${BASE_URL}/en`,
     },
   },
   robots: {
@@ -69,14 +71,21 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
+  verification: {
+    // google: "aggiungere qui il codice Google Search Console",
+  },
 };
 
-export default function ENLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <>
-      <NavbarEN />
-      <main>{children}</main>
-      <FooterEN />
-    </>
+    <html lang="it">
+      <head>
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="manifest" href="/site.webmanifest" />
+      </head>
+      <body>{children}</body>
+    </html>
   );
 }
