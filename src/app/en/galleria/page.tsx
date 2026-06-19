@@ -13,6 +13,8 @@ const galleries = [
   { year: "1990", href: "/en/galleria/1990", description: "The 1990 edition, among the richest in community participation.", color: "#4A6B8A" },
   { year: "2023", href: "/en/galleria/2023", description: "A grand return with the renewed format and the debut of the Association.", color: "#188B87" },
   { year: "2024", href: "/en/galleria/2024", description: "The 2024 edition: the representation in the ancient village, more alive than ever.", color: "#0f6b68" },
+  { year: "2025", href: "/en/galleria/2025", description: "The 2025 edition of the Sacred Representation of the Passion of Christ.", color: "#1a8a85" },
+  { year: "2026", href: "/en/galleria/2026", description: "The 2026 edition of the Sacred Representation of the Passion of Christ.", color: "#0d5552" },
 ];
 
 export default function GalleriaENPage() {

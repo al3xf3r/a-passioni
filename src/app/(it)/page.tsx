@@ -61,6 +61,8 @@ const galleryYears = [
   { year: "1990", href: "/galleria/1990" },
   { year: "2023", href: "/galleria/2023" },
   { year: "2024", href: "/galleria/2024" },
+  { year: "2025", href: "/galleria/2025" },
+  { year: "2026", href: "/galleria/2026" },
 ];
 
 export default function HomePage() {
@@ -212,9 +214,9 @@ export default function HomePage() {
               <span style={{ display: "inline-block", fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--color-primary-light)", marginBottom: 16 }}>
                 Archivio Fotografico
               </span>
-              <h2 style={{ color: "white", marginBottom: 20 }}>Quattro decenni di storia</h2>
+              <h2 style={{ color: "white", marginBottom: 20 }}>Oltre quattro decenni di storia</h2>
               <p style={{ color: "rgba(255,255,255,0.65)", marginBottom: 36, lineHeight: 1.75 }}>
-                Dalle edizioni storiche del 1985 e 1987 alle rappresentazioni moderne del 2023 e 2024. Un archivio fotografico che racconta l&apos;evoluzione di una tradizione secolare attraverso volti, costumi e luoghi.
+                Dalle edizioni storiche del 1985 e 1987 alle rappresentazioni moderne del 2023, 2024 e 2025. Un archivio fotografico che racconta l&apos;evoluzione di una tradizione secolare attraverso volti, costumi e luoghi.
               </p>
               <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
                 {galleryYears.map(({ year, href }) => (

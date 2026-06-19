@@ -57,6 +57,8 @@ const galleryYears = [
   { year: "1990", href: "/en/galleria/1990" },
   { year: "2023", href: "/en/galleria/2023" },
   { year: "2024", href: "/en/galleria/2024" },
+  { year: "2025", href: "/en/galleria/2025" },
+  { year: "2026", href: "/en/galleria/2026" },
 ];
 
 export default function ENHomePage() {
@@ -158,9 +160,9 @@ export default function ENHomePage() {
           <div style={{ display: "grid", gap: 64, alignItems: "center" }} className="grid-2col">
             <div>
               <span style={{ display: "inline-block", fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--color-primary-light)", marginBottom: 16 }}>Photo Archive</span>
-              <h2 style={{ color: "white", marginBottom: 20 }}>Four decades of history</h2>
+              <h2 style={{ color: "white", marginBottom: 20 }}>Over four decades of history</h2>
               <p style={{ color: "rgba(255,255,255,0.65)", marginBottom: 36, lineHeight: 1.75 }}>
-                From the historic editions of 1985 and 1987 to the modern representations of 2023 and 2024. A photographic archive telling the evolution of a centuries-old tradition through faces, costumes and places.
+                From the historic editions of 1985 and 1987 to the modern representations of 2023, 2024 and 2025. A photographic archive telling the evolution of a centuries-old tradition through faces, costumes and places.
               </p>
               <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
                 {galleryYears.map(({ year, href }) => (

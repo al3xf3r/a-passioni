@@ -39,6 +39,18 @@ const galleries = [
     description: "L'edizione 2024: la rappresentazione nel borgo antico, ancora più viva.",
     color: "#0f6b68",
   },
+  {
+    year: "2025",
+    href: "/galleria/2025",
+    description: "L'edizione 2025 della Sacra Rappresentazione della Passione di Cristo.",
+    color: "#1a8a85",
+  },
+  {
+    year: "2026",
+    href: "/galleria/2026",
+    description: "L'edizione 2026 della Sacra Rappresentazione della Passione di Cristo.",
+    color: "#0d5552",
+  },
 ];
 
 export default function GalleriaPage() {

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import CloudinaryGallery from "@/components/CloudinaryGallery";
 
-const validYears = ["1985", "1987", "1990", "2023", "2024"];
+const validYears = ["1985", "1987", "1990", "2023", "2024", "2025", "2026"];
 
 export async function generateStaticParams() {
   return validYears.map((year) => ({ year }));
