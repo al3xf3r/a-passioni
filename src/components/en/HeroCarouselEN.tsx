@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Camera, Calendar } from "lucide-react";
 
-const TARGET = new Date("August 9, 2026 17:00:00");
+const TARGET = new Date("August 2, 2026 17:00:00");
 
 function getTimeLeft() {
   const diff = TARGET.getTime() - Date.now();
@@ -102,7 +102,7 @@ export default function HeroCarouselEN() {
                 <Calendar size={14} />
                 Next event
               </div>
-              <div className="passione-countdown-date">9 August 2026</div>
+              <div className="passione-countdown-date">2 August 2026</div>
               <div className="passione-countdown-grid">
                 {([
                   { value: time.days, label: "Days" },
